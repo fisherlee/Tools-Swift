@@ -115,7 +115,6 @@
         <!--Navigation Controller-->
         <scene sceneID="eDx-Ck-NIi">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="v43-qF-Rbw" userLabel="First Responder" sceneMemberID="firstResponder"/>
                 <navigationController useStoryboardIdentifierAsRestorationIdentifier="YES" id="Piz-qf-9vM" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="GtT-Yw-Ctn">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
@@ -125,6 +124,7 @@
                         <segue destination="62R-ta-vR8" kind="relationship" relationship="rootViewController" id="fkc-T2-0GX"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="v43-qF-Rbw" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="377" y="1268"/>
         </scene>

@@ -8,7 +8,7 @@
 
 import UIKit
 
-class iPad_ViewController: UIViewController,UITableViewDataSource,UITableViewDelegate, RecordControllerDelegate {
+class iPad_ViewController: UIViewController,UITableViewDataSource,UITableViewDelegate, RecordControllerDelegate, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet weak var masterTableView: UITableView!
     @IBOutlet weak var detailView: UIView!
@@ -20,21 +20,24 @@ class iPad_ViewController: UIViewController,UITableViewDataSource,UITableViewDel
         }
     }
     
+    let tvCellHeight: CGFloat = 60
     var fontSize: CGFloat = 17
     
     
-    let  titleArr = ["BlueColor", "BrownColor", "RedColor", "OrangeColor", "A+&Font", "A-&Font", "H-&Font"];
+    let  titleArr = ["BlueColor", "BrownColor", "RedColor", "OrangeColor", "A+&Font", "A-&Font", "H-&Font", "Images-&Font"];
     
     let dataArr = [UIColor.blueColor(), UIColor.brownColor(), UIColor.redColor(), UIColor.orangeColor()];
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        self.masterTableView.delegate = self;
-        self.masterTableView.dataSource = self;
-        self.masterTableView.separatorStyle = UITableViewCellSeparatorStyle.None
+        masterTableView.delegate = self;
+        masterTableView.dataSource = self;
+        masterTableView.separatorStyle = UITableViewCellSeparatorStyle.None
         
-        self.contentTextView.font = UIFont.systemFontOfSize(fontSize)
+        contentTextView.font = UIFont.systemFontOfSize(fontSize)
+        contentTextView.layer.borderColor = UIColor.lightGrayColor().CGColor
+        contentTextView.layer.borderWidth = 1
     }
 
     override func didReceiveMemoryWarning() {
@@ -47,13 +50,19 @@ class iPad_ViewController: UIViewController,UITableViewDataSource,UITableViewDel
         self.contentTextView.textColor = color
     }
     
+    // MARK: - UIImagePickerControllerDelegate
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
+        dismissViewControllerAnimated(true, completion: nil)
+        print("image=",image)
+    }
+    
     // MARK: - UITableViewDataSource
     func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return titleArr.count
     }
     
     func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 80
+        return tvCellHeight
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -101,6 +110,38 @@ class iPad_ViewController: UIViewController,UITableViewDataSource,UITableViewDel
             navigationController.modalPresentationStyle = UIModalPresentationStyle.PageSheet
             
             self.presentViewController(navigationController, animated: true, completion: nil)
+        }
+        if indexPath.row == 7 {
+            let alertController = UIAlertController.init(title: "Items", message: "", preferredStyle: UIAlertControllerStyle.ActionSheet)
+            let photoAction = UIAlertAction(title: "Photo", style: UIAlertActionStyle.Default, handler: { (alert: UIAlertAction) in
+                let pickerController = UIImagePickerController.init()
+                pickerController.allowsEditing = false
+                pickerController.sourceType = UIImagePickerControllerSourceType.PhotoLibrary
+                pickerController.delegate = self
+                self.presentViewController(pickerController, animated: true, completion: nil)
+            })
+            alertController.addAction(photoAction)
+            
+            let cameraAction = UIAlertAction(title: "Camera", style: UIAlertActionStyle.Default, handler: { (alert:UIAlertAction) in
+                if UIImagePickerController.isSourceTypeAvailable(UIImagePickerControllerSourceType.Camera) {
+                    let pickerController = UIImagePickerController.init()
+                    pickerController.allowsEditing = false
+                    pickerController.delegate = self
+                    pickerController.sourceType = UIImagePickerControllerSourceType.Camera
+                    self.presentViewController(pickerController, animated: true, completion: nil)
+                }
+            })
+            alertController.addAction(cameraAction)
+            
+            let appAction = UIAlertAction(title: "App", style: UIAlertActionStyle.Default, handler: { (alert:UIAlertAction) in
+                
+            })
+            alertController.addAction(appAction)
+            
+            alertController.popoverPresentationController?.sourceView = self.view
+            alertController.popoverPresentationController?.sourceRect = CGRectMake(80, tvCellHeight * CGFloat(indexPath.row + 1), 0, 0)
+            self.presentViewController(alertController, animated: true, completion: nil)
+            
         }
     }
     
